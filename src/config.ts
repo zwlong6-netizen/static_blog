@@ -133,7 +133,7 @@ export const navBarConfig: NavBarConfig = {
 				},
 				{
 					name: "统计",
-					url: "https://umami.zzzero.site",
+					url: "https://analysis1.zzzero.site",
 					external: true,
 				},
 			],
