@@ -131,6 +131,11 @@ export const navBarConfig: NavBarConfig = {
 					url: "https://www.travellings.cn/go.html",
 					external: true,
 				},
+				{
+					name: "统计",
+					url: "https://umami.zzzero.site",
+					external: true,
+				},
 				// {
 				// 	name: "Bilibili",
 				// 	url: "https://space.bilibili.com/701864046",
