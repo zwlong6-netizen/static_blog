@@ -137,11 +137,11 @@ export const navBarConfig: NavBarConfig = {
 				// },
 			],
 		},
-		{
-			name: "我的",
-			url: "/content/",
-			children: [LinkPreset.Anime, LinkPreset.Diary, LinkPreset.Gallery],
-		},
+		// {
+		// 	name: "我的",
+		// 	url: "/content/",
+		// 	children: [LinkPreset.Anime, LinkPreset.Diary, LinkPreset.Gallery],
+		// },
 		{
 			name: "关于",
 			url: "/content/",
