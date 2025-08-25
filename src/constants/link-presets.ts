@@ -6,6 +6,7 @@ export const LinkPresets: { [key in LinkPreset]: NavBarLink } = {
 	[LinkPreset.Home]: {
 		name: i18n(I18nKey.home),
 		url: "https://zzzero.site",
+		external: true,
 	},
 	[LinkPreset.About]: {
 		name: i18n(I18nKey.about),
