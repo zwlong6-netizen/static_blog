@@ -128,7 +128,7 @@ export const navBarConfig: NavBarConfig = {
 				LinkPreset.Friends,
 				{
 					name: "开往",
-					url: "https://www.travellings.cn/",
+					url: "https://www.travellings.cn/go.html",
 					external: true,
 				},
 				// {
