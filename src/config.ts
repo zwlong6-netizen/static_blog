@@ -125,12 +125,6 @@ export const navBarConfig: NavBarConfig = {
 					url: "https://github.com/zwlong6",
 					external: true,
 				},
-				LinkPreset.Friends,
-				{
-					name: "开往",
-					url: "https://www.travellings.cn/go.html",
-					external: true,
-				},
 				{
 					name: "统计",
 					url: "https://analysis1.zzzero.site",
