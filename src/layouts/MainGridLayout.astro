@@ -198,7 +198,7 @@ const mainContentClass = `
                 <ImageWrapper 
                     id="mobile-banner"
                     alt="Mobile banner image of the blog" 
-                    class:list={["block lg:hidden object-cover h-full w-full transition duration-700 opacity-0 scale-105"]}
+                    class:list={["block lg:hidden object-cover h-full w-full transition duration-700 opacity-100"]}
                     src={(Array.isArray(bannerImages.mobile) ? bannerImages.mobile[0] : bannerImages.mobile) || (Array.isArray(bannerImages.desktop) ? bannerImages.desktop[0] : bannerImages.desktop) || ''} 
                     position={siteConfig.banner.position}
                 />
