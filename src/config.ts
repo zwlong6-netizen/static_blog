@@ -136,24 +136,26 @@ export const navBarConfig: NavBarConfig = {
 					url: "https://umami.zzzero.site",
 					external: true,
 				},
-				// {
-				// 	name: "Bilibili",
-				// 	url: "https://space.bilibili.com/701864046",
-				// 	external: true,
-				// },
-				// {
-				// 	name: "Gitee",
-				// 	url: "https://gitee.com/matsuzakayuki/Mizuki",
-				// 	external: true,
-				// },
 			],
 		},
+		{
+			name: "朋友",
+			url: "/friends/",
+			children: [
+				LinkPreset.Friends,
+				{
+					name: "开往",
+					url: "https://www.travellings.cn/go.html",
+					external: true,
+				},
+			],
+		},
+		LinkPreset.About,
 		// {
 		// 	name: "我的",
 		// 	url: "/content/",
 		// 	children: [LinkPreset.Anime, LinkPreset.Diary, LinkPreset.Gallery],
 		// },
-		LinkPreset.About,
 		// {
 		// 	name: "其他",
 		// 	url: "#",
