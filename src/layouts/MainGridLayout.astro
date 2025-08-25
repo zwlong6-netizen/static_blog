@@ -196,6 +196,7 @@ const mainContentClass = `
             <div class="relative h-full w-full">
                 <!-- Mobile: use mobile-specific image with same logic as desktop -->
                 <ImageWrapper 
+                    id="mobile-banner"
                     alt="Mobile banner image of the blog" 
                     class:list={["block lg:hidden object-cover h-full w-full transition duration-700 opacity-0 scale-105"]}
                     src={(Array.isArray(bannerImages.mobile) ? bannerImages.mobile[0] : bannerImages.mobile) || (Array.isArray(bannerImages.desktop) ? bannerImages.desktop[0] : bannerImages.desktop) || ''} 
