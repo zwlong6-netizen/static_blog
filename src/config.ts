@@ -125,6 +125,12 @@ export const navBarConfig: NavBarConfig = {
 					url: "https://github.com/zwlong6",
 					external: true,
 				},
+				LinkPreset.Friends,
+				{
+					name: "开往",
+					url: "https://www.travellings.cn/",
+					external: true,
+				},
 				// {
 				// 	name: "Bilibili",
 				// 	url: "https://space.bilibili.com/701864046",
@@ -142,11 +148,7 @@ export const navBarConfig: NavBarConfig = {
 		// 	url: "/content/",
 		// 	children: [LinkPreset.Anime, LinkPreset.Diary, LinkPreset.Gallery],
 		// },
-		{
-			name: "关于",
-			url: "/content/",
-			children: [LinkPreset.About, LinkPreset.Friends],
-		},
+		LinkPreset.About,
 		// {
 		// 	name: "其他",
 		// 	url: "#",
