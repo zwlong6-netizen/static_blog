@@ -39,6 +39,8 @@ declare global {
 			execute: () => void;
 		};
 		mobileTOCInit?: () => void;
+		// 记录页面路径，用于判断是否真正的页面切换
+		lastPath?: string;
 	}
 }
 

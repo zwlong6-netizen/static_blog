@@ -1012,6 +1012,9 @@ function init() {
 	initCustomScrollbar();
 	showBanner();
 	
+	// 初始化页面路径记录，用于判断是否真正的页面切换
+	window.lastPath = window.location.pathname;
+	
 	// 翻译功能改为懒加载，不在页面初始化时加载
 }
 
@@ -1136,11 +1139,17 @@ const setup = () => {
 			heightExtend.classList.remove('hidden')
 		}
 		
-		// 确保页面滚动到顶部，特别是移动端banner关闭时
-		window.scrollTo({
-			top: 0,
-			behavior: 'instant'
-		});
+		// 只在真正的页面切换时滚动到顶部，避免评论交互时滚动
+		// 检查是否是真正的页面切换（URL变化）
+		const currentPath = window.location.pathname;
+		if (window.lastPath !== currentPath) {
+			window.lastPath = currentPath;
+			// 确保页面滚动到顶部，特别是移动端banner关闭时
+			window.scrollTo({
+				top: 0,
+				behavior: 'instant'
+			});
+		}
 		
 		// 检查当前页面是否为文章页面，如果是则触发自定义事件用于初始化评论系统
 		setTimeout(() => {
