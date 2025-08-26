@@ -71,21 +71,47 @@ const config = {
 
       // 标记点击来源于评论区，供全局逻辑判断
       window.__clickInComment = true;
-      setTimeout(() => { window.__clickInComment = false; }, 0);
+      window.__lastCommentInteractionTs = Date.now();
+      setTimeout(() => { window.__clickInComment = false; }, 800);
 
-      if (!anchor) return;
+      // 1) 拦截锚点链接，避免浏览器滚动到顶部/Swup接管
+      if (anchor) {
+        const href = anchor.getAttribute('href') || '';
+        if (href === '' || href === '#' || href === '#!' || href.startsWith('#')) {
+          event.preventDefault();
+          event.stopPropagation();
+          event.stopImmediatePropagation?.();
+          return;
+        }
+      }
 
-      const href = anchor.getAttribute('href') || '';
-      // 拦截 href="#" 或空哈希，避免回到顶部与被 Swup 接管
-      if (href === '#' || href === '' || href === '#!') {
-        event.preventDefault();
-        event.stopPropagation();
-        event.stopImmediatePropagation?.();
-        return;
+      // 2) 拦截位于表单内的 button 默认提交（like/评论按钮若未声明 type 会触发表单提交）
+      const button = target && typeof target.closest === 'function' ? target.closest('button') : null;
+      if (button) {
+        const form = typeof button.closest === 'function' ? button.closest('form') : null;
+        if (form) {
+          event.preventDefault();
+          // 不阻止冒泡，交给 Twikoo 的 JS 处理内部逻辑
+        }
       }
     };
 
     commentEl.addEventListener('click', guard, { capture: true });
+
+    // 3) 捕获表单提交，若 action 为空或锚点，阻止浏览器默认跳转导致回顶
+    const submitGuard = function (event) {
+      const form = event.target as HTMLFormElement | undefined;
+      if (!form) return;
+      const action = (form.getAttribute && form.getAttribute('action')) || '';
+      window.__clickInComment = true;
+      window.__lastCommentInteractionTs = Date.now();
+      setTimeout(() => { window.__clickInComment = false; }, 800);
+      if (action === '' || action === '#' || action.startsWith('#')) {
+        event.preventDefault();
+        // 不阻止冒泡，让 Twikoo 自身的提交逻辑继续运行
+      }
+    } as EventListener;
+    commentEl.addEventListener('submit', submitGuard, { capture: true });
   }
 
   // 页面首次加载时初始化（若DOMContentLoaded已触发则立即执行）
