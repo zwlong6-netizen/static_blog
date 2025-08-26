@@ -54,13 +54,13 @@ export type SiteConfig = {
 				pauseTime: number; // 完整显示后的暂停时间（毫秒）
 			};
 		};
-		navbar?: {
-			transparentMode?: "semi" | "full"; // 导航栏透明模式："semi" 半透明加圆角，"full" 完全透明
-		};
 		credit: {
 			enable: boolean;
 			text: string;
 			url?: string;
+		};
+		navbar?: {
+			transparentMode?: "semi" | "full" | "semifull"; // 导航栏透明模式
 		};
 	};
 	toc: {
@@ -94,6 +94,7 @@ export type NavBarLink = {
 	name: string;
 	url: string;
 	external?: boolean;
+	icon?: string; // 菜单项图标
 	children?: (NavBarLink | LinkPreset)[]; // 支持子菜单，可以是NavBarLink或LinkPreset
 };
 
@@ -252,4 +253,20 @@ export type SakuraConfig = {
 		rotation: number; // 旋转速度
 	};
 	zIndex: number; // 层级，确保樱花在合适的层级显示
+};
+
+export type FullscreenWallpaperConfig = {
+	enable: boolean; // 是否启用全屏壁纸功能
+	src: {
+		desktop?: string | string[]; // 桌面端壁纸图片
+		mobile?: string | string[]; // 移动端壁纸图片
+	};
+	position?: "top" | "center" | "bottom"; // 壁纸位置，等同于 object-position
+	carousel?: {
+		enable: boolean; // 是否启用轮播
+		interval: number; // 轮播间隔时间（秒）
+	};
+	zIndex?: number; // 层级，确保壁纸在合适的层级显示
+	opacity?: number; // 壁纸透明度，0-1之间
+	blur?: number; // 背景模糊程度，单位px
 };

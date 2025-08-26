@@ -3,6 +3,7 @@ import type {
 	CommentConfig,
 	ExpressiveCodeConfig,
 	FooterConfig,
+	FullscreenWallpaperConfig,
 	LicenseConfig,
 	MusicPlayerConfig,
 	NavBarConfig,
@@ -20,13 +21,13 @@ import { getTranslateLanguageFromConfig } from "./utils/language-utils";
 const SITE_LANG = "zh_CN"; // 语言代码，例如：'en', 'zh_CN', 'ja' 等。
 
 export const siteConfig: SiteConfig = {
-	title: "ZhouZhou",
-	subtitle: "a blog about my life",
+	title: "Mizuki",
+	subtitle: "One demo website",
 
 	lang: SITE_LANG,
 
 	themeColor: {
-		hue: 240, // 主题色的默认色相，范围从 0 到 360。例如：红色：0，青色：200，蓝绿色：250，粉色：345
+		hue: 210, // 主题色的默认色相，范围从 0 到 360。例如：红色：0，青色：200，蓝绿色：250，粉色：345
 		fixed: false, // 对访问者隐藏主题色选择器
 	},
 	translate: {
@@ -39,43 +40,45 @@ export const siteConfig: SiteConfig = {
 		ignoreTags: ["script", "style", "code", "pre"], // 翻译时忽略的 HTML 标签
 	},
 	banner: {
-		enable: true, // 暂时禁用横幅以提高加载速度
+		enable: false, // 暂时禁用横幅以提高加载速度
+
 		// 支持单张图片或图片数组，当数组长度 > 1 时自动启用轮播
 		src: {
 			desktop: [
-				// "https://s1.imagehub.cc/images/2025/08/24/2604e15625c8a5ac42ac3b7535411220.jpeg",
-				"assets/desktop-banner/1.png",
+				"assets/desktop-banner/1.webp",
+				"assets/desktop-banner/2.webp",
+				"assets/desktop-banner/3.webp",
+				"assets/desktop-banner/4.webp",
+				"assets/desktop-banner/5.webp",
+				"assets/desktop-banner/6.webp",
 			], // 桌面横幅图片
 			mobile: [
-				"assets/mobile-banner/1.png", 
-				// "https://s1.imagehub.cc/images/2025/08/24/3c8dd5aa69b67ffd8e89db3a93f670c6.webp",
-				// "assets/mobile-banner/3.webp",
-				// "http://www.98qy.com/sjbz/api.php?=1",
-				// "https://picsum.photos/400/800",
+				"assets/mobile-banner/1.webp",
+				"assets/mobile-banner/2.webp",
+				"assets/mobile-banner/3.webp",
+				"assets/mobile-banner/4.webp",
+				"assets/mobile-banner/5.webp",
+				"assets/mobile-banner/6.webp",
 			], // 移动横幅图片
 		}, // 使用本地横幅图片
 
 		position: "center", // 等同于 object-position，仅支持 'top', 'center', 'bottom'。默认为 'center'
 
 		carousel: {
-			enable: false, // 为 true 时：为多张图片启用轮播。为 false 时：从数组中随机显示一张图片
+			enable: true, // 为 true 时：为多张图片启用轮播。为 false 时：从数组中随机显示一张图片
 
-			interval: 20, // 轮播间隔时间（秒）- 减慢轮播速度
+			interval: 1, // 轮播间隔时间（秒）
 		},
 
 		homeText: {
 			enable: true, // 在主页显示自定义文本
-			title: "ZhouZhou's Blog", // 主页横幅主标题
+			title: "Mizuki", // 主页横幅主标题
 
 			subtitle: [
-				"欢迎来到我的博客",
-				"这是一个关于我生活的博客",
-				"在这里你可以看到我的生活点滴",
-				"欢迎留言评论",
-				"欢迎分享",
-				"欢迎关注",
-				"欢迎点赞",
-				"欢迎收藏",
+				"One demo website",
+				"Carousel Text1",
+				"Carousel Text2",
+				"Carousel Text3",
 			], // 主页横幅副标题，支持多文本
 			typewriter: {
 				enable: true, // 启用副标题打字机效果
@@ -94,7 +97,7 @@ export const siteConfig: SiteConfig = {
 		},
 
 		navbar: {
-			// transparentMode: "full", // 导航栏透明模式："semi" 半透明加圆角，"full" 完全透明（不设置则为不透明）
+			transparentMode: "semifull", // 导航栏透明模式："semi" 半透明加圆角，"full" 完全透明，"semifull" 动态透明
 		},
 	},
 	toc: {
@@ -110,6 +113,29 @@ export const siteConfig: SiteConfig = {
 		// }
 	],
 };
+export const fullscreenWallpaperConfig: FullscreenWallpaperConfig = {
+	enable: true, // 启用全屏壁纸功能,非Banner模式下生效
+	src: {
+		desktop: [
+			"/assets/desktop-banner/1.webp",
+			"/assets/desktop-banner/2.webp",
+			"/assets/desktop-banner/3.webp",
+		], // 桌面端壁纸图片
+		mobile: [
+			"/assets/mobile-banner/1.webp",
+			"/assets/mobile-banner/2.webp",
+			"/assets/mobile-banner/3.webp",
+		], // 移动端壁纸图片
+	},
+	position: "center", // 壁纸位置，等同于 object-position
+	carousel: {
+		enable: true, // 启用轮播
+		interval: 5, // 轮播间隔时间（秒）
+	},
+	zIndex: -1, // 层级，确保壁纸在背景层
+	opacity: 0.8, // 壁纸透明度
+	blur: 1, // 背景模糊程度
+};
 
 export const navBarConfig: NavBarConfig = {
 	links: [
@@ -119,68 +145,84 @@ export const navBarConfig: NavBarConfig = {
 		{
 			name: "链接",
 			url: "/links/",
+			icon: "material-symbols:link",
 			children: [
 				{
 					name: "GitHub",
-					url: "https://github.com/zwlong6",
+					url: "https://github.com/matsuzaka-yuki/Mizuki",
 					external: true,
+					icon: "fa6-brands:github",
 				},
 				{
-					name: "统计",
-					url: "https://analysis.zzzero.site",
+					name: "Bilibili",
+					url: "https://space.bilibili.com/701864046",
 					external: true,
+					icon: "fa6-brands:bilibili",
+				},
+				{
+					name: "Gitee",
+					url: "https://gitee.com/matsuzakayuki/Mizuki",
+					external: true,
+					icon: "mdi:git",
 				},
 			],
 		},
 		{
-			name: "朋友",
-			url: "/friends/",
+			name: "我的",
+			url: "/content/",
+			icon: "material-symbols:person",
+			children: [LinkPreset.Anime, LinkPreset.Diary, LinkPreset.Gallery],
+		},
+		{
+			name: "关于",
+			url: "/content/",
+			icon: "material-symbols:info",
+			children: [LinkPreset.About, LinkPreset.Friends],
+		},
+		{
+			name: "其他",
+			url: "#",
+			icon: "material-symbols:more-horiz",
 			children: [
-				LinkPreset.Friends,
 				{
-					name: "开往",
-					url: "https://www.travellings.cn/go.html",
-					external: true,
+					name: "项目展示",
+					url: "/projects/",
+					icon: "material-symbols:work",
+				},
+				{
+					name: "技能展示",
+					url: "/skills/",
+					icon: "material-symbols:psychology",
+				},
+				{
+					name: "时间线",
+					url: "/timeline/",
+					icon: "material-symbols:timeline",
 				},
 			],
 		},
-		LinkPreset.About,
-		// {
-		// 	name: "我的",
-		// 	url: "/content/",
-		// 	children: [LinkPreset.Anime, LinkPreset.Diary, LinkPreset.Gallery],
-		// },
-		// {
-		// 	name: "其他",
-		// 	url: "#",
-		// 	children: [
-		// 		{
-		// 			name: "项目展示",
-		// 			url: "/projects/",
-		// 		},
-		// 		{
-		// 			name: "技能展示",
-		// 			url: "/skills/",
-		// 		},
-		// 		{
-		// 			name: "时间线",
-		// 			url: "/timeline/",
-		// 		},
-		// 	],
-		// },
 	],
 };
 
 export const profileConfig: ProfileConfig = {
-	// avatar: "assets/images/avatar.jpg", // 相对于 /src 目录。如果以 '/' 开头，则相对于 /public 目录
-	avatar: "https://s1.imagehub.cc/images/2025/08/22/5aeabd5d7868bc9bc70af208609c7b50.jpg", // 相对于 /src 目录。如果以 '/' 开头，则相对于 /public 目录
-	name: "ZhouZhou",
-	bio: "a blog about my life",
+	avatar: "assets/images/avatar.jpg", // 相对于 /src 目录。如果以 '/' 开头，则相对于 /public 目录
+	name: "Mizuki",
+	bio: "这是一个描述",
 	links: [
 		{
-			name: "Github",
+			name: "Bilibli",
+			icon: "fa6-brands:bilibili",
+			url: "https://space.bilibili.com/701864046",
+		},
+		{
+			name: "Gitee",
+			icon: "mdi:git",
+			url: "https://gitee.com/matsuzakayuki",
+		},
+		{
+			name: "GitHub",
 			icon: "fa6-brands:github",
-			url: "https://github.com/zwlong6",
+			url: "https://github.com/matsuzaka-yuki",
 		},
 	],
 	// Umami统计部份，记得在layout插入Umami的head标签
@@ -204,15 +246,15 @@ export const expressiveCodeConfig: ExpressiveCodeConfig = {
 };
 
 export const commentConfig: CommentConfig = {
-	enable: true, // 启用评论功能。当设置为 false 时，评论组件将不会显示在文章区域。
+	enable: false, // 启用评论功能。当设置为 false 时，评论组件将不会显示在文章区域。
 	twikoo: {
-		envId: "https://twikoo.zzzero.site",
+		envId: "https://twikoo.vercel.app",
 	},
 };
 
 export const announcementConfig: AnnouncementConfig = {
 	title: "公告", // 公告标题
-	content: "欢迎来到我的博客！", // 公告内容
+	content: "欢迎来到我的博客！这是一个示例公告。", // 公告内容
 	closable: true, // 允许用户关闭公告
 	link: {
 		enable: true, // 启用链接
@@ -256,7 +298,7 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 			position: "top",
 			// CSS 类名，用于应用样式和动画
 			class: "onload-animation",
-			// 动画延迟时间（毫秒），用于错开动画效果 - 优化为0延迟
+			// 动画延迟时间（毫秒），用于错开动画效果
 			animationDelay: 0,
 		},
 		{
@@ -270,8 +312,8 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 			position: "top",
 			// CSS 类名
 			class: "onload-animation",
-			// 动画延迟时间 - 优化为0延迟
-			animationDelay: 0,
+			// 动画延迟时间
+			animationDelay: 50,
 		},
 		{
 			// 组件类型：分类组件
@@ -284,8 +326,8 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 			position: "sticky",
 			// CSS 类名
 			class: "onload-animation",
-			// 动画延迟时间 - 优化为最小延迟
-			animationDelay: 30,
+			// 动画延迟时间
+			animationDelay: 150,
 			// 响应式配置
 			responsive: {
 				// 折叠阈值：当分类数量超过5个时自动折叠
@@ -303,8 +345,8 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 			position: "sticky",
 			// CSS 类名
 			class: "onload-animation",
-			// 动画延迟时间 - 优化为最小延迟
-			animationDelay: 60,
+			// 动画延迟时间
+			animationDelay: 200,
 			// 响应式配置
 			responsive: {
 				// 折叠阈值：当标签数量超过20个时自动折叠
@@ -313,14 +355,14 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 		},
 	],
 
-	// 优化的默认动画配置
+	// 默认动画配置
 	defaultAnimation: {
 		// 是否启用默认动画
 		enable: true,
-		// 基础延迟时间（毫秒）- 优化为0
+		// 基础延迟时间（毫秒）
 		baseDelay: 0,
-		// 递增延迟时间（毫秒）- 优化为更小的值
-		increment: 20,
+		// 递增延迟时间（毫秒），每个组件依次增加的延迟
+		increment: 50,
 	},
 
 	// 响应式布局配置
@@ -348,7 +390,7 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 };
 
 export const sakuraConfig: SakuraConfig = {
-	enable: false, // 默认关闭樱花特效
+	enable: true, // 默认关闭樱花特效
 	sakuraNum: 21, // 樱花数量
 	limitTimes: -1, // 樱花越界限制次数，-1为无限循环
 	size: {
@@ -357,17 +399,18 @@ export const sakuraConfig: SakuraConfig = {
 	},
 	speed: {
 		horizontal: {
-			min: -0.8, // 水平移动速度最小值 - 减慢速度
-			max: -0.5, // 水平移动速度最大值 - 减慢速度
+			min: -1.7, // 水平移动速度最小值
+			max: -1.2, // 水平移动速度最大值
 		},
 		vertical: {
-			min: 0.6, // 垂直移动速度最小值 - 减慢速度
-			max: 1.0, // 垂直移动速度最大值 - 减慢速度
+			min: 1.5, // 垂直移动速度最小值
+			max: 2.2, // 垂直移动速度最大值
 		},
-		rotation: 0.015, // 旋转速度 - 减慢一半
+		rotation: 0.03, // 旋转速度
 	},
 	zIndex: 100, // 层级，确保樱花在合适的层级显示
 };
+
 // 导出所有配置的统一接口
 export const widgetConfigs = {
 	profile: profileConfig,
@@ -375,4 +418,5 @@ export const widgetConfigs = {
 	music: musicPlayerConfig,
 	layout: sidebarLayoutConfig,
 	sakura: sakuraConfig,
+	fullscreenWallpaper: fullscreenWallpaperConfig,
 } as const;

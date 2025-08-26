@@ -39,12 +39,6 @@ declare global {
 			execute: () => void;
 		};
 		mobileTOCInit?: () => void;
-		// 记录页面路径，用于判断是否真正的页面切换
-		lastPath?: string;
-		// 标记是否在评论区内触发点击
-		__clickInComment?: boolean;
-		// 记录最近一次评论区交互时间，用于时间窗口判断
-		__lastCommentInteractionTs?: number;
 	}
 }
 

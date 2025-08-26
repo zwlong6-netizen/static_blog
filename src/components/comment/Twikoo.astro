@@ -13,178 +13,70 @@ const config = {
 ---
 
 <div id="tcomment"></div>
+<script is:inline src="/scroll-protection.js"></script>
 <script is:inline src="/assets/js/twikoo.all.min.js"></script>
 <script is:inline define:vars={{ config }}>
-  // 获取当前页面路径的函数
+  // 获取当前页面路径
   function getCurrentPath() {
     const pathname = window.location.pathname;
-    // 移除末尾的斜杠（如果存在）
     return pathname.endsWith('/') && pathname.length > 1 ? pathname.slice(0, -1) : pathname;
   }
   
-  // 动态创建配置对象的函数
+  // 动态创建配置对象
   function createTwikooConfig() {
     return {
       ...config,
       path: getCurrentPath(),
-      el: '#tcomment',
+      el: '#tcomment'
     };
   }
   
-  // 初始化 Twikoo 的函数
-  function initTwikooWithRetry() {
-    let retryCount = 0;
-    const maxRetries = 3;
-    
-    function initTwikoo() {
-      if (typeof twikoo !== 'undefined') {
-        // 清空现有评论容器
-        const commentEl = document.getElementById('tcomment');
-        if (commentEl) {
-          commentEl.innerHTML = '';
-        }
+  // 初始化 Twikoo
+  function initTwikoo() {
+    if (typeof twikoo !== 'undefined') {
+      const commentEl = document.getElementById('tcomment');
+      if (commentEl) {
+        commentEl.innerHTML = '';
         
-        // 使用动态配置初始化 Twikoo
         const dynamicConfig = createTwikooConfig();
-        console.log('Twikoo 初始化配置:', dynamicConfig);
-        twikoo.init(dynamicConfig);
-      } else if (retryCount < maxRetries) {
-        retryCount++;
-        console.log(`Twikoo 加载重试 ${retryCount}/${maxRetries}...`);
-        setTimeout(initTwikoo, 500); // 500ms 后重试
-      } else {
-        console.error('Twikoo 加载失败，请刷新页面重试');
+        console.log('[Twikoo] 初始化配置:', dynamicConfig);
+        
+        twikoo.init(dynamicConfig).then(() => {
+          console.log('[Twikoo] 初始化完成');
+        }).catch((error) => {
+          console.error('[Twikoo] 初始化失败:', error);
+        });
       }
+    } else {
+      // 如果 Twikoo 未加载，稍后重试
+      setTimeout(initTwikoo, 500);
     }
-    
-    initTwikoo();
   }
-  // 在评论容器内拦截会导致滚动到顶部的点击
-  function setupCommentClickGuards() {
-    const commentEl = document.getElementById('tcomment');
-    if (!commentEl) return;
-
-    // 捕获阶段拦截，优先于 Swup 的 link:click 处理
-    const guard = function (event) {
-      const target = event.target;
-      const anchor = target && typeof target.closest === 'function' ? target.closest('a') : null;
-
-      // 标记点击来源于评论区，供全局逻辑判断
-      window.__clickInComment = true;
-      window.__lastCommentInteractionTs = Date.now();
-      setTimeout(() => { window.__clickInComment = false; }, 2000);
-
-      // 仅拦截锚点/相对链接/当前路径链接/无效链接，避免浏览器滚动到顶部/Swup接管
-      if (anchor) {
-        const href = anchor.getAttribute('href') || '';
-        // 归一化当前路径
-        const currentPath = window.location.pathname.replace(/\/$/, '') || '/';
-        // 将 href 转为可比较的形式（不创建 URL 避免相对路径抛错）
-        const normalizedHref = href.replace(/\/$/, '');
-
-        const isHashOnly = normalizedHref === '' || normalizedHref === '#' || normalizedHref === '#!' || normalizedHref.startsWith('#');
-        const isQueryOnly = normalizedHref.startsWith('?');
-        const isDotPath = normalizedHref === '.' || normalizedHref === './';
-        const isJavaScriptHref = normalizedHref.toLowerCase().startsWith('javascript:');
-
-        // 判断是否为同源同路径的绝对链接
-        let isSameOriginSamePath = false;
-        try {
-          const abs = new URL(normalizedHref, window.location.href);
-          const absPath = abs.pathname.replace(/\/$/, '') || '/';
-          isSameOriginSamePath = (abs.origin === window.location.origin) && (absPath === currentPath);
-        } catch (_) {}
-
-        if (isHashOnly || isQueryOnly || isDotPath || isJavaScriptHref || isSameOriginSamePath) {
-          event.preventDefault();
-          event.stopPropagation();
-          event.stopImmediatePropagation?.();
-          return;
-        }
-      }
-    };
-
-    commentEl.addEventListener('click', guard, { capture: true });
-
-    // 防止表单提交导致页面跳转/回到顶部
-    const submitGuard = function (event) {
-      const form = event.target;
-      if (!(form instanceof HTMLFormElement)) return;
-      // 没有明确 action 或 action 为锚点/当前页时，阻止默认提交
-      const action = (form.getAttribute('action') || '').trim();
-      const method = (form.getAttribute('method') || 'get').toLowerCase();
-      const isActionEmpty = action === '';
-      const isActionHash = action === '#' || action === '#!' || action.startsWith('#');
-      let isActionSamePage = false;
-      try {
-        const abs = new URL(action || '.', window.location.href);
-        isActionSamePage = abs.origin === window.location.origin && abs.pathname.replace(/\/$/, '') === window.location.pathname.replace(/\/$/, '');
-      } catch (_) {}
-      if (isActionEmpty || isActionHash || isActionSamePage || method === 'get') {
-        event.preventDefault();
-        event.stopPropagation();
-        event.stopImmediatePropagation?.();
-        return false;
-      }
-    };
-    commentEl.addEventListener('submit', submitGuard, { capture: true });
-  }
-
-  // 页面首次加载时初始化（若DOMContentLoaded已触发则立即执行）
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-      initTwikooWithRetry();
-      setupCommentClickGuards();
+  
+  // 页面加载时初始化
+  document.addEventListener('DOMContentLoaded', initTwikoo);
+  
+  // Swup 页面切换后重新初始化
+  if (window.swup && window.swup.hooks) {
+    window.swup.hooks.on('content:replace', function() {
+      setTimeout(initTwikoo, 200);
     });
   } else {
-    initTwikooWithRetry();
-    setupCommentClickGuards();
+    document.addEventListener('swup:enable', function() {
+      if (window.swup && window.swup.hooks) {
+        window.swup.hooks.on('content:replace', function() {
+          setTimeout(initTwikoo, 200);
+        });
+      }
+    });
   }
   
-  // 监听 Swup 页面切换事件，在内容替换后重新初始化 Twikoo
-  function setupSwupHooks() {
-    if (window.swup && window.swup.hooks) {
-      // 在页面内容替换后重新初始化
-      window.swup.hooks.on('content:replace', function() {
-        // 延迟执行以确保 DOM 已完全更新
-        setTimeout(function() {
-          const commentEl = document.getElementById('tcomment');
-          if (commentEl) {
-            console.log('Swup 页面切换后重新初始化 Twikoo，当前路径:', getCurrentPath());
-            initTwikooWithRetry();
-            setupCommentClickGuards();
-          }
-        }, 200);
-      });
-      
-      // 在页面访问开始时清理旧的评论数据
-      window.swup.hooks.on('visit:start', function() {
-        const commentEl = document.getElementById('tcomment');
-        if (commentEl) {
-          commentEl.innerHTML = '';
-          console.log('页面切换开始，清理评论容器');
-        }
-      });
-    }
-  }
-  
-  // 设置 Swup 钩子
-  if (window.swup) {
-    setupSwupHooks();
-  } else {
-    document.addEventListener('swup:enable', setupSwupHooks);
-  }
-  
-  // 监听自定义事件，在页面完全加载后重新初始化 Twikoo
-  document.addEventListener('mizuki:page:loaded', function(event) {
-    const eventDetail = event.detail || {};
-    console.log('Mizuki 页面加载完成事件触发，路径:', eventDetail.path, '时间戳:', eventDetail.timestamp);
-    
+  // 自定义事件监听
+  document.addEventListener('mizuki:page:loaded', function() {
     const commentEl = document.getElementById('tcomment');
     if (commentEl) {
-      // 确保在自定义事件触发时也使用最新的路径
-      console.log('通过自定义事件重新初始化 Twikoo，当前路径:', getCurrentPath());
-      initTwikooWithRetry();
+      console.log('[Twikoo] 通过自定义事件重新初始化');
+      initTwikoo();
     }
   });
 </script>
