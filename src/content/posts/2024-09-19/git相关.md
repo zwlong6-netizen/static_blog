@@ -2,7 +2,7 @@
 title: git相关
 description: git相关的命令详细说明
 published: 2024-09-19 09:53:11
-updated: 2024-09-19 10:16:35
+updated: 2024-09-19 10:16:01
 draft: false
 series:
 tags:
@@ -14,7 +14,7 @@ licenseName: CC BY 4.0
 sourceLink: https://blog.zzzero.site/posts/2024-09-19/git相关/
 image: http://www.98qy.com/sjbz/api.php?r=26095318
 ---
-## 1. 相关命令fdfds 
+## 1. 相关命令 
 ```shell
 # 远程
 origin main
