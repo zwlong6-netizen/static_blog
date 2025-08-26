@@ -1149,7 +1149,7 @@ const setup = () => {
 		if (window.lastPath !== currentPath) {
 			window.lastPath = currentPath;
 			// 确保页面滚动到顶部，特别是移动端banner关闭时
-			const recentCommentClick = (window as any).__clickInComment || (Date.now() - ((window as any).__lastCommentInteractionTs || 0) < 800);
+			const recentCommentClick = (window as any).__clickInComment || (Date.now() - ((window as any).__lastCommentInteractionTs || 0) < 1600);
 			if (!recentCommentClick) {
 				window.scrollTo({
 					top: 0,

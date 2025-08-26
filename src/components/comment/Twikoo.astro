@@ -72,12 +72,22 @@ const config = {
       // 标记点击来源于评论区，供全局逻辑判断
       window.__clickInComment = true;
       window.__lastCommentInteractionTs = Date.now();
-      setTimeout(() => { window.__clickInComment = false; }, 800);
+      setTimeout(() => { window.__clickInComment = false; }, 1500);
 
-      // 仅拦截锚点链接，避免浏览器滚动到顶部/Swup接管
+      // 仅拦截锚点/相对链接/当前路径链接，避免浏览器滚动到顶部/Swup接管
       if (anchor) {
         const href = anchor.getAttribute('href') || '';
-        if (href === '' || href === '#' || href === '#!' || href.startsWith('#')) {
+        // 归一化当前路径
+        const currentPath = window.location.pathname.replace(/\/$/, '') || '/';
+        // 将 href 转为可比较的形式（不创建 URL 避免相对路径抛错）
+        const normalizedHref = href.replace(/\/$/, '');
+
+        const isHashOnly = normalizedHref === '' || normalizedHref === '#' || normalizedHref === '#!' || normalizedHref.startsWith('#');
+        const isQueryOnly = normalizedHref.startsWith('?');
+        const isDotPath = normalizedHref === '.' || normalizedHref === './';
+        const isSamePath = normalizedHref === currentPath;
+
+        if (isHashOnly || isQueryOnly || isDotPath || isSamePath) {
           event.preventDefault();
           event.stopPropagation();
           event.stopImmediatePropagation?.();
