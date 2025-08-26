@@ -1,9 +1,9 @@
 ---
-title: test2
+title: docker总结
 description: 文章描述（必需）
-published: 2025-08-25 00:24:09
-updated: 2025-08-25 00:25:37
-draft: false
+published: 2025-08-26 09:56:16
+updated: 2025-08-26 09:56:16
+draft: true
 series: markdown
 tags:
   - Markdown
@@ -12,13 +12,11 @@ category: Examples
 pinned: true
 author: zwl
 licenseName: CC BY 4.0
-sourceLink: https://blog.zzzero.site/posts/test2/
-image: http://www.98qy.com/sjbz/api.php?r=25002409
+sourceLink: https://blog.zzzero.site/posts/2025-08-26/docker总结/
+image: http://www.98qy.com/sjbz/api.php?r=26095616
 ---
 
 
 ## 文章内容
 
 在这里写入您的文章内容...
-hello world!
-hello
