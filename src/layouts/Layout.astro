@@ -1143,20 +1143,7 @@ const setup = () => {
 			heightExtend.classList.remove('hidden')
 		}
 		
-		// 只在真正的页面切换时滚动到顶部，避免评论交互时滚动
-		// 检查是否是真正的页面切换（URL变化）
-		const currentPath = window.location.pathname;
-		if (window.lastPath !== currentPath) {
-			window.lastPath = currentPath;
-			// 确保页面滚动到顶部，特别是移动端banner关闭时
-			const recentCommentClick = (window as any).__clickInComment || (Date.now() - ((window as any).__lastCommentInteractionTs || 0) < 2000);
-			if (!recentCommentClick) {
-				window.scrollTo({
-					top: 0,
-					behavior: 'instant'
-				});
-			}
-		}
+		// 全局不再强制回到顶部，保留用户当前滚动位置
 		
 		// 检查当前页面是否为文章页面，如果是则触发自定义事件用于初始化评论系统
 		setTimeout(() => {
