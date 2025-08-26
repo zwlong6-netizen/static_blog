@@ -72,9 +72,9 @@ const config = {
       // 标记点击来源于评论区，供全局逻辑判断
       window.__clickInComment = true;
       window.__lastCommentInteractionTs = Date.now();
-      setTimeout(() => { window.__clickInComment = false; }, 1500);
+      setTimeout(() => { window.__clickInComment = false; }, 2000);
 
-      // 仅拦截锚点/相对链接/当前路径链接，避免浏览器滚动到顶部/Swup接管
+      // 仅拦截锚点/相对链接/当前路径链接/无效链接，避免浏览器滚动到顶部/Swup接管
       if (anchor) {
         const href = anchor.getAttribute('href') || '';
         // 归一化当前路径
@@ -85,9 +85,17 @@ const config = {
         const isHashOnly = normalizedHref === '' || normalizedHref === '#' || normalizedHref === '#!' || normalizedHref.startsWith('#');
         const isQueryOnly = normalizedHref.startsWith('?');
         const isDotPath = normalizedHref === '.' || normalizedHref === './';
-        const isSamePath = normalizedHref === currentPath;
+        const isJavaScriptHref = normalizedHref.toLowerCase().startsWith('javascript:');
 
-        if (isHashOnly || isQueryOnly || isDotPath || isSamePath) {
+        // 判断是否为同源同路径的绝对链接
+        let isSameOriginSamePath = false;
+        try {
+          const abs = new URL(normalizedHref, window.location.href);
+          const absPath = abs.pathname.replace(/\/$/, '') || '/';
+          isSameOriginSamePath = (abs.origin === window.location.origin) && (absPath === currentPath);
+        } catch (_) {}
+
+        if (isHashOnly || isQueryOnly || isDotPath || isJavaScriptHref || isSameOriginSamePath) {
           event.preventDefault();
           event.stopPropagation();
           event.stopImmediatePropagation?.();
@@ -97,6 +105,29 @@ const config = {
     };
 
     commentEl.addEventListener('click', guard, { capture: true });
+
+    // 防止表单提交导致页面跳转/回到顶部
+    const submitGuard = function (event) {
+      const form = event.target;
+      if (!(form instanceof HTMLFormElement)) return;
+      // 没有明确 action 或 action 为锚点/当前页时，阻止默认提交
+      const action = (form.getAttribute('action') || '').trim();
+      const method = (form.getAttribute('method') || 'get').toLowerCase();
+      const isActionEmpty = action === '';
+      const isActionHash = action === '#' || action === '#!' || action.startsWith('#');
+      let isActionSamePage = false;
+      try {
+        const abs = new URL(action || '.', window.location.href);
+        isActionSamePage = abs.origin === window.location.origin && abs.pathname.replace(/\/$/, '') === window.location.pathname.replace(/\/$/, '');
+      } catch (_) {}
+      if (isActionEmpty || isActionHash || isActionSamePage || method === 'get') {
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation?.();
+        return false;
+      }
+    };
+    commentEl.addEventListener('submit', submitGuard, { capture: true });
   }
 
   // 页面首次加载时初始化（若DOMContentLoaded已触发则立即执行）
