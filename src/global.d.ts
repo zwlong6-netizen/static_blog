@@ -41,6 +41,8 @@ declare global {
 		mobileTOCInit?: () => void;
 		// 记录页面路径，用于判断是否真正的页面切换
 		lastPath?: string;
+		// 标记是否在评论区内触发点击
+		__clickInComment?: boolean;
 	}
 }
 

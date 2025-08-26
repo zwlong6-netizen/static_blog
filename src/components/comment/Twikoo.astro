@@ -60,8 +60,40 @@ const config = {
     initTwikoo();
   }
   
+  // 在评论容器内拦截会导致滚动到顶部的点击
+  function setupCommentClickGuards() {
+    const commentEl = document.getElementById('tcomment');
+    if (!commentEl) return;
+
+    // 捕获阶段拦截，优先于 Swup 的 link:click 处理
+    const guard = function (event) {
+      const target = event.target as HTMLElement | null;
+      const anchor = target && (target.closest ? target.closest('a') : null) as HTMLAnchorElement | null;
+
+      // 标记点击来源于评论区，供全局逻辑判断
+      (window as any).__clickInComment = true;
+      setTimeout(() => { (window as any).__clickInComment = false; }, 0);
+
+      if (!anchor) return;
+
+      const href = anchor.getAttribute('href') || '';
+      // 拦截 href="#" 或空哈希，避免回到顶部与被 Swup 接管
+      if (href === '#' || href === '' || href === '#!') {
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation?.();
+        return;
+      }
+    } as EventListener;
+
+    commentEl.addEventListener('click', guard, { capture: true });
+  }
+
   // 页面首次加载时初始化
-  document.addEventListener('DOMContentLoaded', initTwikooWithRetry);
+  document.addEventListener('DOMContentLoaded', () => {
+    initTwikooWithRetry();
+    setupCommentClickGuards();
+  });
   
   // 监听 Swup 页面切换事件，在内容替换后重新初始化 Twikoo
   function setupSwupHooks() {
@@ -74,6 +106,7 @@ const config = {
           if (commentEl) {
             console.log('Swup 页面切换后重新初始化 Twikoo，当前路径:', getCurrentPath());
             initTwikooWithRetry();
+            setupCommentClickGuards();
           }
         }, 200);
       });

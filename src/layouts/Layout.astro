@@ -1035,6 +1035,10 @@ const setup = () => {
 	})
 */
 	window.swup.hooks.on('link:click', () => {
+		// 如果点击来源于评论区，跳过全局的顶部滚动/导航修饰
+		if ((window as any).__clickInComment) {
+			return;
+		}
 		// Remove the delay for the first time page load
 		document.documentElement.style.setProperty('--content-delay', '0ms')
 
@@ -1133,6 +1137,10 @@ const setup = () => {
 		}
 	});
 	window.swup.hooks.on('page:view', () => {
+		// 如果触发来自评论区交互，避免强制滚动到顶部
+		if ((window as any).__clickInComment) {
+			return;
+		}
 		// hide the temp high element when the transition is done
 		const heightExtend = document.getElementById('page-height-extend')
 		if (heightExtend) {
