@@ -2,7 +2,7 @@
 title: git相关
 description: git相关的命令详细说明
 published: 2024-09-19 09:53:11
-updated: 2024-09-19 10:03:11
+updated: 2024-09-19 10:16:35
 draft: false
 series:
 tags:
@@ -50,7 +50,7 @@ git pull main
 # git chechout -
 
 # 3. 在branch_test分支下，修改代码（修改的是Disk上的代码，所以Disk上的文件和Local上的文件不一致）
-# 查看有什么改变
+# 查看有什么改变？
 git diff
 
 # 4. 将Disk上的文件拷贝到暂存区
