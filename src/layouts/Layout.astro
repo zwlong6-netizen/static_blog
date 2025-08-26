@@ -1137,10 +1137,6 @@ const setup = () => {
 		}
 	});
 	window.swup.hooks.on('page:view', () => {
-		// 如果触发来自评论区交互，避免强制滚动到顶部
-		if ((window as any).__clickInComment) {
-			return;
-		}
 		// hide the temp high element when the transition is done
 		const heightExtend = document.getElementById('page-height-extend')
 		if (heightExtend) {
@@ -1153,10 +1149,12 @@ const setup = () => {
 		if (window.lastPath !== currentPath) {
 			window.lastPath = currentPath;
 			// 确保页面滚动到顶部，特别是移动端banner关闭时
-			window.scrollTo({
-				top: 0,
-				behavior: 'instant'
-			});
+			if (!(window as any).__clickInComment) {
+				window.scrollTo({
+					top: 0,
+					behavior: 'instant'
+				});
+			}
 		}
 		
 		// 检查当前页面是否为文章页面，如果是则触发自定义事件用于初始化评论系统

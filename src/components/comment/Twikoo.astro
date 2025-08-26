@@ -59,7 +59,6 @@ const config = {
     
     initTwikoo();
   }
-  
   // 在评论容器内拦截会导致滚动到顶部的点击
   function setupCommentClickGuards() {
     const commentEl = document.getElementById('tcomment');
@@ -67,12 +66,12 @@ const config = {
 
     // 捕获阶段拦截，优先于 Swup 的 link:click 处理
     const guard = function (event) {
-      const target = event.target as HTMLElement | null;
-      const anchor = target && (target.closest ? target.closest('a') : null) as HTMLAnchorElement | null;
+      const target = event.target;
+      const anchor = target && typeof target.closest === 'function' ? target.closest('a') : null;
 
       // 标记点击来源于评论区，供全局逻辑判断
-      (window as any).__clickInComment = true;
-      setTimeout(() => { (window as any).__clickInComment = false; }, 0);
+      window.__clickInComment = true;
+      setTimeout(() => { window.__clickInComment = false; }, 0);
 
       if (!anchor) return;
 
@@ -84,16 +83,21 @@ const config = {
         event.stopImmediatePropagation?.();
         return;
       }
-    } as EventListener;
+    };
 
     commentEl.addEventListener('click', guard, { capture: true });
   }
 
-  // 页面首次加载时初始化
-  document.addEventListener('DOMContentLoaded', () => {
+  // 页面首次加载时初始化（若DOMContentLoaded已触发则立即执行）
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      initTwikooWithRetry();
+      setupCommentClickGuards();
+    });
+  } else {
     initTwikooWithRetry();
     setupCommentClickGuards();
-  });
+  }
   
   // 监听 Swup 页面切换事件，在内容替换后重新初始化 Twikoo
   function setupSwupHooks() {
