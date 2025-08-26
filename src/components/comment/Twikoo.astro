@@ -28,15 +28,6 @@ const config = {
       ...config,
       path: getCurrentPath(),
       el: '#tcomment',
-      // 添加 Twikoo 评论加载完成后的回调
-      onCommentLoaded: () => {
-        // 阻止点赞/评论按钮的默认点击行为
-        document.querySelectorAll('.tk-like, .tk-comment-btn').forEach(btn => {
-          btn.addEventListener('click', (e) => {
-            e.preventDefault(); // 关键：阻止默认滚动行为
-          });
-        });
-      }
     };
   }
   
